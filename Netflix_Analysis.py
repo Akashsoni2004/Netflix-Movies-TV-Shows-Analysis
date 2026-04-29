@@ -22,17 +22,22 @@ df['month'] = df['Release_Date'].dt.month
 df['movie_age'] = 2026 - df['year']
 
 # Create rating categories
-def rating_category(x):
-    if x >= 7:
-        return "Popular"
-    elif x >= 5:
-        return "Average"
-    elif x >= 3:
-        return "Below Average"
-    else:
-        return "Flop"
+def categorize_col(df, col, labels):
 
-df['rating_category'] = df['Vote_Average'].apply(rating_category)
+    edges = [df[col].describe()["min"],
+             df[col].describe()["25%"],
+             df[col].describe()["50%"],
+             df[col].describe()["75%"],
+             df[col].describe()["max"]
+            ]
+    
+    df[col] = pd.cut(df[col], edges, labels = labels, duplicates = "drop")
+    return df
+    
+
+labels = ["Flop", "Below_avg", "Average", "Popular"]
+categorize_col(df, "Vote_Average", labels)
+
 
 # Split multiple genres
 df['Genre'] = df['Genre'].str.split(',')
