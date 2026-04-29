@@ -1,25 +1,17 @@
-# ================================
-# 1. Import Libraries
-# ================================
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Style
 sns.set_style(style="whitegrid")
 
-# ================================
-# 2. Load Dataset
-# ================================
+# reading csv file
 df = pd.read_csv("mymoviedb.csv")
 
 print("Dataset Shape:", df.shape)
 print(df.head())
 
-# ================================
-# 3. Data Preprocessing
-# ================================
+# Data Preprocessing
 
 # Convert Release_Date to datetime
 df['Release_Date'] = pd.to_datetime(df['Release_Date'])
@@ -49,11 +41,7 @@ df = df.explode('Genre')
 # Remove spaces in genre names
 df['Genre'] = df['Genre'].str.strip()
 
-# ================================
-# 4. BASIC QUESTIONS
-# ================================
 
-print("\n--- BASIC ANALYSIS ---")
 
 # Total movies
 print("Total Movies:", df.shape[0])
@@ -75,11 +63,7 @@ print("\nGenre Average Ratings:\n", genre_avg_rating)
 # Rating category count
 print("\nRating Categories:\n", df['rating_category'].value_counts())
 
-# ================================
-# 5. INTERMEDIATE QUESTIONS
-# ================================
 
-print("\n--- INTERMEDIATE ANALYSIS ---")
 
 # Rating trend over years
 rating_trend = df.groupby('year')['Vote_Average'].mean()
@@ -100,23 +84,22 @@ print("\nAverage Rating by Movie Age:\n", df.groupby('movie_age')['Vote_Average'
 monthly_rating = df.groupby('month')['Vote_Average'].mean()
 print("\nAverage Rating by Month:\n", monthly_rating)
 
-# ================================
-# 6. VISUALIZATIONS
-# ================================
 
-# 1. Movies per Genre
+# Insights and Graphs
+
+# Movies per Genre
 plt.figure(figsize=(10,5))
 sns.countplot(y='Genre', data=df, order=df['Genre'].value_counts().index)
 plt.title("Number of Movies per Genre")
 plt.show()
 
-# 2. Genre vs Average Rating
+# Genre vs Average Rating
 plt.figure(figsize=(10,5))
 sns.barplot(x=genre_avg_rating.values, y=genre_avg_rating.index)
 plt.title("Average Rating by Genre")
 plt.show()
 
-# 3. Rating Trend Over Years
+# Rating Trend Over Years
 plt.figure(figsize=(10,5))
 sns.lineplot(x=rating_trend.index, y=rating_trend.values)
 plt.title("Rating Trend Over Years")
@@ -124,28 +107,25 @@ plt.xlabel("Year")
 plt.ylabel("Average Rating")
 plt.show()
 
-# 4. Distribution of Ratings
+# Distribution of Ratings
 plt.figure(figsize=(8,5))
 sns.histplot(df['Vote_Average'], bins=20, kde=True)
 plt.title("Distribution of Ratings")
 plt.show()
 
-# 5. Boxplot (Genre vs Rating)
+# Boxplot (Genre vs Rating)
 plt.figure(figsize=(12,6))
 sns.boxplot(x='Genre', y='Vote_Average', data=df)
 plt.xticks(rotation=90)
 plt.title("Rating Distribution by Genre")
 plt.show()
 
-# 6. Correlation Heatmap
+# Correlation Heatmap
 plt.figure(figsize=(8,5))
 sns.heatmap(df.corr(numeric_only=True), annot=True)
 plt.title("Correlation Heatmap")
 plt.show()
 
-# ================================
-# 7. FINAL INSIGHTS (PRINT)
-# ================================
 
 print("\n--- KEY INSIGHTS ---")
 
